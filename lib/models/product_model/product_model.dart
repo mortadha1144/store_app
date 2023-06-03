@@ -5,7 +5,7 @@ import 'rating.dart';
 class ProductModel extends Equatable {
   final int? id;
   final String? title;
-  final double? price;
+  final dynamic price;
   final String? description;
   final String? category;
   final String? image;
@@ -24,7 +24,7 @@ class ProductModel extends Equatable {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json['id'] as int?,
         title: json['title'] as String?,
-        price: (json['price'] as num?)?.toDouble(),
+        price: json['price'],
         description: json['description'] as String?,
         category: json['category'] as String?,
         image: json['image'] as String?,

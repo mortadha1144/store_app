@@ -1,74 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:store_app/models/product_model/product_model.dart';
+import 'package:store_app/screens/home_page/widgets/custom_card.dart';
+import 'package:store_app/services/all_products_service.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            height: 130,
-            width: 220,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                blurRadius: 40,
-                spreadRadius: 0,
-                offset: const Offset(10, 10),
-                color: Colors.grey.withOpacity(0.2),
-              ),
-            ]),
-            child: const Card(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Handbag Lv',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          r'$255',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 32,
-            top: -50,
-            child: Image.network(
-              'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-              height: 100,
-            ),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 65,
       ),
+      child: FutureBuilder<List<ProductModel>>(
+          future: AllProductsService().getAllProducts(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<ProductModel> products = snapshot.data!;
+              return GridView.builder(
+                itemCount: products.length,
+                clipBehavior: Clip.none,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.5,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 80,
+                ),
+                itemBuilder: (context, index) => CustomCard(
+                  product: products[index],
+                ),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 }
